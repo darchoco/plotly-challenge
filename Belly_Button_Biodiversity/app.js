@@ -1,21 +1,17 @@
-//defining variable for manipulation later
-var filtereddata = null
 
 //filter function defined to be called when data is generated
-//utilizes startingdata variable that is defined before the filter is called
-function filterData(data)
+//utilizes startingdata variable that is defined before the filter is calle
+function filterData(data, input)
 {
-  for (var i = 0; i < data.length; i++)
+for (var i = 0; i < data.length; i++)
+{
+  var dataNum = parseInt(data[i].id)
+  if (dataNum == parseInt(input))
   {
-    console.log(data[i].id)
-    if (data[i].id = parseInt(filtereddata))
-    {
-    return data;
-    }
+  return data[i];
   }
-  
-};
-
+}
+}
 
 function getdata()
 {
@@ -38,15 +34,17 @@ d3.json("samples.json").then((data) => {
 
 };
 
-function graphData()
+function optionChanged(input)
 {
+  console.log(input)
+ // var filtereddata = d3.select("#selDataset").node().value;
   d3.json("samples.json").then((data) => {
-      //defining selection on the dropdown as the starting data to filter to from the data
-      var filtereddata = d3.select("#selDataset").node().value;
 
+    
       //calling defined function to filter metadat
-      var metadataPlotData = filterData(data.metadata);
-      var samplesPlotData = filterData(data.samples);
+
+      var metadataPlotData = filterData(data.metadata, input);
+      var samplesPlotData = filterData(data.samples, input);
       console.log(samplesPlotData);
       //  Create the Traces
       // var trace1 = {
@@ -71,8 +69,4 @@ function graphData()
       // Plotly.newPlot("plot", data, layout);
 })};
 
-function optionChanged()
-{
-  graphData()
-}
 getdata()
