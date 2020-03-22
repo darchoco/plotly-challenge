@@ -25,9 +25,9 @@ d3.json("samples.json").then((data) => {
     {
       return `<option value = "${d}">${d}</option>`
     });
-
+    var intialid = d3.select("#selDataset").node().value
     //printing data
-    console.log(data.metadata[0].id)
+    optionChanged(intialid)
 
 
   });
@@ -56,26 +56,44 @@ function optionChanged(input)
         pLine.append('p').text(`wfreq: ${metadataPlotData.wfreq}`);
 
       //  Create the Traces
-      // var trace1 = {
-      //   x: data.organ,
-      //   y: data.survival.map(val => Math.sqrt(val)),
-      //   type: "box",
-      //   name: "Cancer Survival",
-      //   boxpoints: "all"
-      // };
+      var trace1 = 
+      {
+        x: samplesPlotData.otu_ids,
+        y: samplesPlotData.sample_values,
+        mode: 'markers',
+        marker: {
+          size: samplesPlotData.sample_values,
+          color: samplesPlotData.otu_ids 
+        }
+      };
     
       // // Create the data array for the plot
-      // var data = [trace1];
-    
+      var data1 = [trace1];
+      
       // // Define the plot layout
-      // var layout = {
-      //   title: "Square Root of Cancer Survival by Organ",
-      //   xaxis: { title: "Organ" },
-      //   yaxis: { title: "Square Root of Survival" }
-      // };
+      var layout1= 
+      {
+        xaxis: { title: "OTU ID" }
+      };
     
-      // // Plot the chart to a div tag with id "plot"
-      // Plotly.newPlot("plot", data, layout);
+      var trace2 =
+      {
+        type: 'bar',
+        x: samplesPlotData.sample_values.sort((a,b)=> a-b),
+        y: samplesPlotData.otu_ids.toString(),
+        orientation: 'h'
+
+      }
+      var data2 = [trace2]
+      var layout2= 
+      {
+        yaxis: { showticklabels: true},
+        hovertext: samplesPlotData.otu_labels,
+        maxdisplayed:10
+      };
+      // Plot the chart to a div tag with id "plot"
+      Plotly.newPlot("bubble", data1, layout1);
+      Plotly.newPlot("bar",data2, layout2)
 })};
 
 getdata()
