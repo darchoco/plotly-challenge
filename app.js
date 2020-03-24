@@ -91,7 +91,7 @@ function optionChanged(input)
           topTenOTUIDs.push(topTenOTU[i][0])
           topTenOTUValues.push(topTenOTU[i][1])
         }
-      //  Create the Traces
+      //  Create the Traces for the bubble chart
       var trace1 = 
       {
         x: samplesPlotData.otu_ids,
@@ -112,7 +112,7 @@ function optionChanged(input)
       {
         xaxis: { title: "OTU ID" }
       };
-     //  Create the Traces
+     //  Create the Traces for bar chart
       var trace2 =
       {
         type: 'bar',
@@ -128,9 +128,29 @@ function optionChanged(input)
         hovertext: samplesPlotData.otu_labels,
         maxdisplayed:10
       };
+      //  Create the Traces for gauge chart
+      var trace3 =
+      {
+        
+          domain: { x: [0, 1], y: [0, 1] },
+          value: metadataPlotData.wfreq,
+          title: { text: "washes" },
+          type: "indicator",
+          mode: "gauge+number",
+          gauge:
+          {
+            axis: { range:[null,9]}
+
+          }
+        
+      }
+      var data3 = [trace3]
+
       // Plot the charts to the divs bubble, bar
       Plotly.newPlot("bubble", data1, layout1);
-      Plotly.newPlot("bar",data2, layout2)
+      Plotly.newPlot("bar",data2, layout2);
+      Plotly.newPlot("gauge",data3);
+
 })};
 //pull intial data on load
 getdata()
