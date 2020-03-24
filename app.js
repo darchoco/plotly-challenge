@@ -1,4 +1,12 @@
 var demoInfo =  d3.select("#sample-metadata"); 
+
+
+function createDictionary(dictionary,key,value)
+{
+  dictionary[key] = value;
+}
+  
+
 //filter function defined to be called when data is generated
 //utilizes startingdata variable that is defined before the filter is calle
 function filterData(data, input)
@@ -42,7 +50,7 @@ function optionChanged(input)
     console.log(data)
     
       //calling defined function to filter metadat
-
+      var dataDict = {}
       var metadataPlotData = filterData(data.metadata, input);
       var samplesPlotData = filterData(data.samples, input);
       demoInfo.html("")
@@ -55,6 +63,28 @@ function optionChanged(input)
         pLine.append('p').text(`bbtype: ${metadataPlotData.bbtype}`);
         pLine.append('p').text(`wfreq: ${metadataPlotData.wfreq}`);
 
+        for (var i = 0; i < samplesPlotData.otu_ids.length; i++)
+        {
+            createDictionary(dataDict, `OTU ${samplesPlotData.otu_ids[i]}`,samplesPlotData.sample_values[i]);
+              
+        }
+        // Create items array
+        var items = Object.keys(dataDict).map(function(key) {
+          return [key, dataDict[key]];
+        });
+        // Sort the array based on the second element
+        items.sort(function(first, second) {
+          return second[1] - first[1];
+        });
+        topTenOTU = items.slice(0, 10);
+        // Create a new array with only the first 5 items
+        topTenOTUIDs = []
+        topTenOTUValues = []
+        for (var i = 0; i < topTenOTU.length; i++)
+        {
+          topTenOTUIDs.push(topTenOTU[i][0])
+          topTenOTUValues.push(topTenOTU[i][1])
+        }
       //  Create the Traces
       var trace1 = 
       {
@@ -79,8 +109,8 @@ function optionChanged(input)
       var trace2 =
       {
         type: 'bar',
-        x: samplesPlotData.sample_values.sort((a,b)=> a-b),
-        y: samplesPlotData.otu_ids.toString(),
+        x: topTenOTUValues,
+        y: topTenOTUIDs,
         orientation: 'h'
 
       }
